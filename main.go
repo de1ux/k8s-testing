@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/de1ux/k8s-testing/operations"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
@@ -14,9 +15,17 @@ func main() {
 	}
 
 	// create the clientset
-	_, err = kubernetes.NewForConfig(config)
+	cs, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
+	}
+
+	c := &operations.Client{
+		Clientset: cs,
+	}
+
+	if err := operations.PrintPods(c, "nginx"); err != nil {
+		panic(err)
 	}
 }
 
